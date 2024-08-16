@@ -29,8 +29,19 @@ async function run() {
     //Write necessary api here:
     //Getting mobiles data from database:
     app.get('/mobiles', async(req, res) =>{
-      const result = await mobileCollection.find().toArray()
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      console.log("pagination query", page, size);
+      const result = await mobileCollection.find()
+      .skip(page * size)
+      .limit(size)
+      .toArray()
       res.send(result)
+    })
+
+    app.get('/mobileCount', async(req, res)=>{
+      const count = await mobileCollection.estimatedDocumentCount();
+      res.send({count})
     })
     
 
