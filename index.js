@@ -25,14 +25,21 @@ async function run() {
 
     // Combined Sorting and Pagination Route
     app.get('/mobiles', async (req, res) => {
+      console.log(req.query);
       const page = parseInt(req.query.page) || 0;
       const size = parseInt(req.query.size) || 8;
-      const sort = req.query.sort || 'asc'; // Sorting order
+      const sort = req.query.sort || 'asc';
       const sortOrder = sort === 'asc' ? 1 : -1;
+      const search = req.query.search || '';
+
+      
+      const query = {
+        productName: { $regex: search, $options: 'i' } // Case-insensitive search
+      };
 
       // Sorting and Pagination
-      const result = await mobileCollection.find()
-        .sort({ price: sortOrder }) // Sort by price
+      const result = await mobileCollection.find(query)
+        .sort({ price: sortOrder })
         .skip(page * size)
         .limit(size)
         .toArray();
