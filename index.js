@@ -25,16 +25,25 @@ async function run() {
 
     // Combined Sorting and Pagination Route
     app.get('/mobiles', async (req, res) => {
-      console.log(req.query);
       const page = parseInt(req.query.page) || 0;
       const size = parseInt(req.query.size) || 8;
       const sort = req.query.sort || 'asc';
       const sortOrder = sort === 'asc' ? 1 : -1;
       const search = req.query.search || '';
 
+      const brand = req.query.brand || '';
+      const category = req.query.category || '';
+      const minPrice = parseInt(req.query.minPrice) || 0;
+      const maxPrice = parseInt(req.query.maxPrice) || Number.MAX_SAFE_INTEGER;
+
       
       const query = {
-        productName: { $regex: search, $options: 'i' } // Case-insensitive search
+        productName: { $regex: search, $options: 'i' }, // Case-insensitive search
+
+        // productName: { $regex: brand, $options: 'i' }, // Filter by brand name
+        category: { $regex: category, $options: 'i' }, // Filter by category name
+        price: { $gte: minPrice, $lte: maxPrice } // Filter by price range
+
       };
 
       // Sorting and Pagination
