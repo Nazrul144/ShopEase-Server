@@ -31,7 +31,6 @@ async function run() {
       const sortOrder = sort === 'asc' ? 1 : -1;
       const search = req.query.search || '';
 
-      const brand = req.query.brand || '';
       const category = req.query.category || '';
       const minPrice = parseInt(req.query.minPrice) || 0;
       const maxPrice = parseInt(req.query.maxPrice) || Number.MAX_SAFE_INTEGER;
