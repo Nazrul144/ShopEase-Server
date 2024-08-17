@@ -37,11 +37,12 @@ async function run() {
 
       
       const query = {
-        productName: { $regex: search, $options: 'i' }, // Case-insensitive search
+        productName: { $regex: search, $options: 'i' }, 
 
-        // productName: { $regex: brand, $options: 'i' }, // Filter by brand name
-        category: { $regex: category, $options: 'i' }, // Filter by category name
-        price: { $gte: minPrice, $lte: maxPrice } // Filter by price range
+         // Filter by category name
+        category: { $regex: category, $options: 'i' }, 
+        // Filter by price range 
+        price: { $gte: minPrice, $lte: maxPrice } 
 
       };
 
