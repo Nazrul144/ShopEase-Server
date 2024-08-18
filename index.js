@@ -6,7 +6,9 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173", "https://shop-ease-b2fc1.web.app", "https://shop-ease-b2fc1.firebaseapp.com"]
+}));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zvedd86.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -32,15 +34,24 @@ async function run() {
       const search = req.query.search || '';
 
       const category = req.query.category || '';
+      const brand = req.query.brand || ''; 
       const minPrice = parseInt(req.query.minPrice) || 0;
       const maxPrice = parseInt(req.query.maxPrice) || Number.MAX_SAFE_INTEGER;
+      console.log('Received brand:', brand);
+      console.log('Received category:', category);
 
+      console.log('Query Parameters:', { page, size, sort, search, category, brand, minPrice, maxPrice });
       
       const query = {
         productName: { $regex: search, $options: 'i' }, 
 
          // Filter by category name
         category: { $regex: category, $options: 'i' }, 
+
+        // Filter by brand
+        brand: { $regex: brand, $options: 'i' }, 
+       
+
         // Filter by price range 
         price: { $gte: minPrice, $lte: maxPrice } 
 
@@ -71,7 +82,8 @@ async function run() {
     });
 
     // Ping to confirm successful connection
-    await client.db('admin').command({ ping: 1 });
+    // await client.db('admin').command({ ping: 1 });
+
     console.log('Pinged your deployment. You successfully connected to MongoDB!');
   } finally {
     // Ensure the client will close when you finish/error
